@@ -1,6 +1,5 @@
 {
     "name": "lizhijun/php-totp",
-    "version": "1.0.0",
     "type": "library",
     "description": "基于时间的一次一密(Time-based One-time Password, TOTP)算法php函数库",
     "keywords": ["security", "otp", "totp", "rfc6238"],
