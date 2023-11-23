@@ -1,0 +1,23 @@
+{
+    "name": "lizhijun/php-totp",
+    "description": "基于时间的一次一密(Time-based One-time Password, TOTP)算法php函数库",
+    "homepage": "https://github.com/lizhijundev/php-totp",
+    "authors": [
+        {
+            "name": "lizhijun",
+            "email": "i@lizhijun.me"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lizhijun\\PhpTotp\\": "src/"
+        }
+    },
+     "license": "MIT"
+}
