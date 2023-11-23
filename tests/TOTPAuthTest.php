@@ -1,12 +1,11 @@
 <?php
-namespace Lizhijun\TOTP\Tests;
 
 
 use Lizhijun\TOTP\TOTPAuth;
 use PHPUnit\Framework\TestCase;
 
 
-class TOTPAuthTest extends TestCase
+final class TOTPAuthTest extends TestCase
 {
     // 测试生成令牌
     public function testCreateSecret(){
@@ -28,10 +27,10 @@ class TOTPAuthTest extends TestCase
             $auth = new TOTPAuth();
 
             $secret = $auth->createSecret();
-            echo "secret is ". $secret .'</end> ';
+            // echo "secret is ". $secret . PHP_EOL;
 
             $code = $auth->getCode($secret);
-            echo "code is ". $code .' ';
+            // echo "code is ". $code . PHP_EOL;
 
             $verifyResult = $auth->verifyCode($secret, $code);
 
