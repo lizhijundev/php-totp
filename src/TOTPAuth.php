@@ -1,16 +1,18 @@
-namespace Lizhijun\PhpTotp;
+<?php
+namespace Lizhijun\TOTP;
 
+use Exception;
 
-class OtpAuthenticator
+class TOTPAuth
 {
     protected $_codeLength = 6;
+
     /**
      * Create new secret.
      * 16 characters, randomly chosen from the allowed base32 characters.
-     *
      * @param int $secretLength
-     *
      * @return string
+     * @throws \Exception
      */
     public function createSecret($secretLength = 16)
     {
@@ -21,11 +23,15 @@ class OtpAuthenticator
         }
         $secret = '';
         $rnd = false;
+
         if (function_exists('random_bytes')) {
+            // (PHP 7, PHP 8) doc see: https://www.php.net/manual/en/function.random-bytes.php
             $rnd = random_bytes($secretLength);
         } elseif (function_exists('mcrypt_create_iv')) {
+            // (PHP 4, PHP 5, PHP 7 < 7.2.0, PECL mcrypt >= 1.0.0) https://www.php.net/manual/en/function.mcrypt-create-iv
             $rnd = mcrypt_create_iv($secretLength, MCRYPT_DEV_URANDOM);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
+            // (PHP 5 >= 5.3.0, PHP 7, PHP 8) https://www.php.net/manual/en/function.openssl-random-pseudo-bytes
             $rnd = openssl_random_pseudo_bytes($secretLength, $cryptoStrong);
             if (!$cryptoStrong) {
                 $rnd = false;
@@ -73,43 +79,21 @@ class OtpAuthenticator
     }
     
     /**
-     * Get QR-Code URL for image, from google charts.
+     * Get QR-Code String to generate qrcode image
      *
-     * @param string $name
      * @param string $secret
-     * @param string $title
-     * @param array  $params
+     * @param string $username
+     * @param string $issuer
      *
      * @return string
      */
-    public function getQRCodeUrl($name, $secret, $title = null, $params = array())
+    public function getQrcodeStr($secret, $username, $issuer = null)
     {
-        $otpStr = 'otpauth://totp/'.$name.'?secret='.$secret.'';
+        $otpStr = 'otpauth://totp/'.urlencode($username).'?secret='.$secret;
         if (isset($title)) {
             $otpStr .= '&issuer='.urlencode($title);
         }
-
-        $qrCode = QrCode::create($otpStr)
-            ->setEncoding(new Encoding('UTF-8'))
-            ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
-            ->setSize(300)
-            ->setMargin(10)
-            ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-            ->setForegroundColor(new Color(0, 0, 0))
-            ->setBackgroundColor(new Color(255, 255, 255));
-
-        $label = Label::create('荔枝君OTP密钥：'.$secret)
-            ->setFont(new NotoSans(12))
-            ->setTextColor(new Color(0, 0, 0));
-
-        $logo = null;
-        if (key_exists('logo_path', $params)) {
-            $logo = Logo::create($params['logo_path'])
-                ->setResizeToWidth(80);
-        }
-
-        $writer = new PngWriter();
-        return $writer->write($qrCode, $logo, $label);
+        return $otpStr;
     }
 
 
