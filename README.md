@@ -6,7 +6,7 @@ TOTP（Time-based One-Time Password），基于时间同步，主要通过一个
 
 ## 安装
 ```
-$ composer require lizhijun/totp
+composer -vvv require lizhijun/php-totp
 ```
 
 ## 调用
